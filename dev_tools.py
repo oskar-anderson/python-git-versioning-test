@@ -5,21 +5,22 @@ import getopt
 TEMPLATE_FILE_PATHS = [ './wwwroot/index-template.html' ]
 BUILD_FILE_PATHS =    [ './wwwroot/index.html' ]
 
-def setLastCommitHashToIndexFile(argv):
+def githubSideRendering(argv):
     # constants
     ejs_pattern = "(<%=\s([a-zA-Z\-\_]+)\s%>)"
     if len(TEMPLATE_FILE_PATHS) != len(BUILD_FILE_PATHS):
         raise Exception("Invalid paths")
 
     # terminal argument handling
-    arg_help = "{0} -h <help> <hash> <commit-msg>".format(argv[0])
+    arg_help = "{0} -h <help> <hash> <commit-msg> <commit-date>".format(argv[0])
     if (len(argv) == 1):
         sys.exit("No arguments passed to script")
     commit_hash = ""
     commit_msg = ""
+    commit_date = ""
 
     try:
-        opts, args = getopt.getopt(argv[1:], "h", ["help", "hash=", "commit-msg="])
+        opts, args = getopt.getopt(argv[1:], "h", ["help", "hash=", "commit-msg=", "commit-date="])
         if (len(args) != 0):
             sys.exit(f"Unknown arguments passed {args}")
     except getopt.GetoptError as err:
@@ -32,15 +33,17 @@ def setLastCommitHashToIndexFile(argv):
             commit_hash = arg
         elif opt in ("--commit-msg"):
             commit_msg = arg
+        elif opt in ("--commit-date"):
+            commit_date = arg
 
     # function body
     for i in range(len(TEMPLATE_FILE_PATHS)):
         TEMPLATE_FILE_PATH = TEMPLATE_FILE_PATHS[i]
         BUILD_FILE_PATH = BUILD_FILE_PATHS[i]
-        template_file_content = ""    
+        template_file_content = ""
         with open(TEMPLATE_FILE_PATH) as f:
             template_file_content = f.read()
-        
+
         print("🧊🧊🧊")
         print("input string:\n", template_file_content)
         print("🧊🧊🧊\n")
@@ -59,13 +62,16 @@ def setLastCommitHashToIndexFile(argv):
             if (key == "latest-version"):
                 pattern = "(v\d+\.\d+\.\d+)"
                 r = re.search(pattern, commit_msg)
+                version = ""
                 if not r:
-                    print(f"latest-version value does not match expected pattern. Regex: '{pattern}', example 'v1.6.13'.")
-                    continue
-                version = r.group(0)
+                    print(f"latest-version value does not match expected pattern. Regex: '{pattern}', example 'v1.6.13'. Replacing with empty string.")
+                else:
+                    version = r.group(0)
                 print(f"replacing: {key} with '{version}'")
                 template_file_content = template_file_content.replace(key_in_templating_syntax, version)
-        
+            if (key == "commit-date"):
+                print(f"replacing: {key} with '{commit_date}'")
+                template_file_content = template_file_content.replace(key_in_templating_syntax, commit_date)
         print("🔥🔥🔥")
         print("output string:\n", template_file_content)
         print("🔥🔥🔥")
@@ -73,4 +79,4 @@ def setLastCommitHashToIndexFile(argv):
             f.write(template_file_content)
 
 
-setLastCommitHashToIndexFile(sys.argv)
+githubSideRendering(sys.argv)

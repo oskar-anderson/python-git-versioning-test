@@ -1,11 +1,9 @@
-name: Update version
+name: Update Footer
 
 # Run workflow on every push to the master branch
 on:
   push:
     branches: [ main ]
-    tags:
-      - '*'
 
 jobs:
   modify-footer:
@@ -27,9 +25,6 @@ jobs:
         git_hash_8=${git_hash:0:8}
         git_commit_msg=$(git log -1 --pretty=%B)
         python3 ./dev_tools.py --hash "$git_hash_8" --commit-msg "$git_commit_msg"
-    # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
-    - name: Add .nojekyll file
-      run: touch wwwroot/.nojekyll
 
 
     - name: Commit files
