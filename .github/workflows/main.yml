@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 jobs:
-  deploy-to-github-pages:
+  modify-footer:
     # use ubuntu-latest image to run steps on
     runs-on: ubuntu-latest
     # https://stackoverflow.com/questions/70374602/getting-error-while-pushing-changes-to-my-own-public-repo-through-github-actions
@@ -23,3 +23,6 @@ jobs:
         git_hash_8=${git_hash:0:8}
         python3 ./dev_tools.py --hash "$git_hash_8"
 
+    # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
+    - name: Add .nojekyll file
+      run: touch wwwroot/.nojekyll
