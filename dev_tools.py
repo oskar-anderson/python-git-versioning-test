@@ -31,31 +31,37 @@ def setLastCommitHashToIndexFile(argv):
         elif opt in ("--hash"):
             commit_hash = arg
         elif opt in ("--version"):
-            commit_hash = arg
+            version = arg
 
     # function body
     template_file_content = ""    
     with open(template_file_path) as f:
         template_file_content = f.read()
+    
+    print("🧊🧊🧊")
+    print("input string:\n", template_file_content)
+    print("🧊🧊🧊\n")
 
-    print("input string:", template_file_content)
+    print()
     matches = re.findall(ejs_pattern, template_file_content)
     if (len(matches) == 0):
         print("No matches found!")
         sys.exit(2)
     for x in matches:
-        key_in_templating_syntax = x[0]
-        key = x[1]
+        key_in_templating_syntax = x[0] # Example value: <%= latest-version %>
+        key = x[1]                      # Example value: latest-version
         if (not key):
             raise RuntimeError("Match pattern does not have 2 groups: ", x)
         if (key == "commit-hash"):
-            print(f"replacing: {key} with {commit_hash}")
+            print(f"replacing: {key} with '{commit_hash}'")
             template_file_content = template_file_content.replace(key_in_templating_syntax, commit_hash)
         if (key == "latest-version"):
-            print(f"replacing: {key} with {version}")
+            print(f"replacing: {key} with '{version}'")
             template_file_content = template_file_content.replace(key_in_templating_syntax, version)
     
-    print("output string:", template_file_content)
+    print("🔥🔥🔥")
+    print("output string:\n", template_file_content)
+    print("🔥🔥🔥")
     with open(build_file_path, 'w') as f:
         f.write(template_file_content)
 
