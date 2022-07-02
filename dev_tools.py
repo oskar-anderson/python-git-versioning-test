@@ -62,9 +62,9 @@ def githubSideRendering(argv):
             if (key == "latest-version"):
                 pattern = "(v\d+\.\d+\.\d+)"
                 r = re.search(pattern, commit_msg)
-                version = ""
+                version = "No version number"
                 if not r:
-                    print(f"latest-version value does not match expected pattern. Regex: '{pattern}', example 'v1.6.13'. Replacing with empty string.")
+                    print(f"latest-version value does not match expected pattern. Regex: '{pattern}', example 'v1.6.13'. Replacing with '{version}'.")
                 else:
                     version = r.group(0)
                 print(f"replacing: {key} with '{version}'")
