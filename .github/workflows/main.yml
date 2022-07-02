@@ -10,9 +10,7 @@ jobs:
     # use ubuntu-latest image to run steps on
     runs-on: ubuntu-latest
     # https://stackoverflow.com/questions/70374602/getting-error-while-pushing-changes-to-my-own-public-repo-through-github-actions
-    permissions:
-      contents: write
-      packages: write
+
     steps:
     # uses GitHub's checkout action to checkout code form the master branch
     - uses: actions/checkout@v2

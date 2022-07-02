@@ -10,13 +10,14 @@ def setLastCommitHashToIndexFile(argv):
     build_file_path =    './wwwroot/index.html'
     
     # terminal argument handling
-    arg_help = "{0} -h <help> <hash>".format(argv[0])
+    arg_help = "{0} -h <help> <hash> <version>".format(argv[0])
     if (len(argv) == 1):
         print("No arguments passed to script")
         sys.exit(2)
     commit_hash = ""
+    version = ""
     try:
-        opts, args = getopt.getopt(argv[1:], "h", ["help", "hash="])
+        opts, args = getopt.getopt(argv[1:], "h", ["help", "hash=", "version="])
         if (len(args) != 0):
             print(f"Unknown arguments passed {args}")
             sys.exit(2)
@@ -28,6 +29,8 @@ def setLastCommitHashToIndexFile(argv):
             print(arg_help)
             sys.exit(2)
         elif opt in ("--hash"):
+            commit_hash = arg
+        elif opt in ("--version"):
             commit_hash = arg
 
     # function body
@@ -48,6 +51,9 @@ def setLastCommitHashToIndexFile(argv):
         if (key == "commit-hash"):
             print(f"replacing: {key} with {commit_hash}")
             template_file_content = template_file_content.replace(key_in_templating_syntax, commit_hash)
+        if (key == "latest-version"):
+            print(f"replacing: {key} with {version}")
+            template_file_content = template_file_content.replace(key_in_templating_syntax, version)
     
     print("output string:", template_file_content)
     with open(build_file_path, 'w') as f:
