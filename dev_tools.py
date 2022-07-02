@@ -1,8 +1,6 @@
-from cmath import e
 import sys
 import re
 import getopt
-from tkinter import E
 
 TEMPLATE_FILE_PATHS = [ './wwwroot/index-template.html' ]
 BUILD_FILE_PATHS =    [ './wwwroot/index.html' ]
