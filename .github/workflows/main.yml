@@ -1,28 +1,40 @@
-name: Update version
+name: Create file
 
-# Run workflow on every push to the master branch
-on:
-  push:
-    branches: [ main ]
+on: [push]
 
 jobs:
-  modify-footer:
-    # use ubuntu-latest image to run steps on
+  build:
     runs-on: ubuntu-latest
-    # https://stackoverflow.com/questions/70374602/getting-error-while-pushing-changes-to-my-own-public-repo-through-github-actions
-    permissions:
-      contents: write
-      packages: write
     steps:
-    # uses GitHub's checkout action to checkout code form the master branch
-    - uses: actions/checkout@v2
-    
-    - name: Add last git hash to index.html
+    - name: Create file
       run: |
-        git_hash=$(git --no-pager log -1 --oneline --format="%H")
-        git_hash_8=${git_hash:0:8}
-        python3 ./dev_tools.py --hash "$git_hash_8"
+        printf "Hello\nWorld\n" > hw.txt
 
-    # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
-    - name: Add .nojekyll file
-      run: touch wwwroot/.nojekyll
+    - name: Create file
+      run: |
+        echo First        > other.txt
+        echo Second Line >> other.txt
+        echo Third       >> other.txt
+
+
+    - name: Show file content
+      run: |
+        pwd
+        ls -la
+        cat hw.txt
+        cat other.txt
+
+
+    - name: Create directory and create file in homedir
+      run: |
+        ls -la ~/
+        mkdir ~/.zorg
+        echo First        > ~/.zorg/home.txt
+        echo Second Line >> ~/.zorg/home.txt
+        echo Third       >> ~/.zorg/home.txt
+        ls -la ~/.zorg/
+
+    - name: Show file content
+      run: |
+        ls -la ~/
+        cat ~/.zorg/home.txt
