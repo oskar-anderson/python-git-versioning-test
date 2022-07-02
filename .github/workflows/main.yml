@@ -1,40 +1,33 @@
-name: Create file
+name: Update version
 
-on: [push]
+# Run workflow on every push to the master branch
+on:
+  push:
+    branches: [ main ]
 
 jobs:
-  build:
+  modify-footer:
+    # use ubuntu-latest image to run steps on
     runs-on: ubuntu-latest
+    # https://stackoverflow.com/questions/70374602/getting-error-while-pushing-changes-to-my-own-public-repo-through-github-actions
+    permissions:
+      contents: write
+      packages: write
     steps:
-    - name: Create file
+    # uses GitHub's checkout action to checkout code form the master branch
+    - uses: actions/checkout@v2
+    
+    - name: Add last git hash to index.html
       run: |
-        printf "Hello\nWorld\n" > hw.txt
-
-    - name: Create file
-      run: |
-        echo First        > other.txt
-        echo Second Line >> other.txt
-        echo Third       >> other.txt
-
-
-    - name: Show file content
-      run: |
-        pwd
-        ls -la
-        cat hw.txt
-        cat other.txt
-
-
-    - name: Create directory and create file in homedir
-      run: |
-        ls -la ~/
-        mkdir ~/.zorg
-        echo First        > ~/.zorg/home.txt
-        echo Second Line >> ~/.zorg/home.txt
-        echo Third       >> ~/.zorg/home.txt
-        ls -la ~/.zorg/
-
-    - name: Show file content
-      run: |
-        ls -la ~/
-        cat ~/.zorg/home.txt
+        git_hash=$(git --no-pager log -1 --oneline --format="%H")
+        git_hash_8=${git_hash:0:8}
+        python3 ./dev_tools.py --hash "$git_hash_8"
+    # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
+    - name: Add .nojekyll file
+      run: touch wwwroot/.nojekyll
+    - name: Push changes # push the output folder to your repo
+      uses: ad-m/github-push-action@master
+      with:
+        # branch: B77 #ignore if your branch is master
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        force: true
