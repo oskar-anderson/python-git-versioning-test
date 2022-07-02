@@ -7,7 +7,7 @@ def setLastCommitHashToIndexFile(argv):
     # constants
     ejs_pattern = "(<%=\s([a-zA-Z\-\_]+)\s%>)"
     template_file_path = './wwwroot/index-template.html'
-    build_file_path = './wwwroot/index.html'
+    build_file_path =    './wwwroot/index.html'
     
     # terminal argument handling
     arg_help = "{0} -h <help> <hash>".format(argv[0])
