@@ -22,7 +22,8 @@ jobs:
       run: |
         git_hash=$(git --no-pager log -1 --oneline --format="%H")
         git_hash_8=${git_hash:0:8}
-        python3 ./dev_tools.py --hash "$git_hash_8"
+        git_latest_tag_version = $(git tag --sort=committerdate | tail -1)  # returns emtpy string if no git tags are found
+        python3 ./dev_tools.py --hash "$git_hash_8" --version "$git_latest_tag_version"
     # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
     - name: Add .nojekyll file
       run: touch wwwroot/.nojekyll
